@@ -9,23 +9,25 @@ namespace AUTG_Graph.Model
 	class Graph
 	{
 		private Random rand = new Random();
-
-		private bool[,] nMatrix;
-		public bool[,] NMatrix { get { return nMatrix; } }
-
-		private uint size;
-		public uint Size { get { return size; } }
+		
+		public bool[,] NMatrix { get; private set; }
+		public uint Size { get; private set; }
 
 		public Graph(uint size, float edgeChance)
 		{
-			this.size = size;
-			nMatrix = new bool[size, size];
+			GenerateGraph(size, edgeChance);
+		}
 
-			for(uint i = 0; i < size; ++i)
+		private void GenerateGraph(uint size, float edgeChance)
+		{
+			this.Size = size;
+			NMatrix = new bool[size, size];
+
+			for (uint i = 0; i < size; ++i)
 			{
-				for(uint j = 0; j < size; ++j)
+				for (uint j = i + 1; j < size; ++j)
 				{
-					nMatrix[i, j] = rand.NextDouble() <= edgeChance;
+					NMatrix[i, j] = NMatrix[j, i] = rand.NextDouble() <= edgeChance;
 				}
 			}
 		}
