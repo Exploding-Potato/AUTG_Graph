@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AUTG_Graph"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="{DynamicResource GraphViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.7*"/>
@@ -21,7 +22,8 @@
             Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
             <StackPanel>
                 <Label Content="Graph generation"/>
-                <TextBox Text="MAKE NUMBERS ONLY"/>
+                <TextBox Text="{Binding VertCount}"/>
+                
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.8*"/>
@@ -29,14 +31,17 @@
                     </Grid.ColumnDefinitions>
                     <Slider
                         Grid.Column="0"
-                        Minimum="0" Maximum="1" Value="0.2"
+                        Minimum="0" Maximum="1"
+                        Value="{Binding EdgeChance}"
                         TickFrequency="5"/>
                     <Label
                         Grid.Column="1"
                         Content="WILL OLNY NUMBERS"/>
                 </Grid>
+                
                 <Button
-                    Content="Generate"/>
+                    Content="Generate"
+                    Click="GenerateButton_Click"/>
                 <Button Content="Fix to Euler graph"/>
                 <Button Content="Find Euler cycle"/>
             </StackPanel>
@@ -47,6 +52,7 @@
         </Canvas>
 
         <Border
+            Name="NeighborMatrix"
             Grid.Column="1" Grid.Row="1"
             Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
             
