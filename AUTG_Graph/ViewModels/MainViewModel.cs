@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using AUTG_Graph.Model;
+using AUTG_Graph.ViewModels.Commands;
 
 namespace AUTG_Graph.ViewModels
 {
@@ -25,8 +25,22 @@ namespace AUTG_Graph.ViewModels
 			get { return _edgeChance; }
 			set { SetProperty(ref _edgeChance, value); }
 		}
+		
 
-		public void GenerateRandom(uint maxWeight = 1)
+		public RelayCommand GenerateGraphCommand { get; private set; }
+		
+		public MainViewModel()
+		{
+			GenerateGraphCommand = new RelayCommand(GenerateRandom, CanGenerate);
+		}
+
+
+		bool CanGenerate(Object obj)
+		{
+			return UInt32.TryParse(VertCount, out uint vertCount);
+		}
+		
+		public void GenerateRandom(Object obj/*uint maxWeight = 1*/)
 		{
 			if (UInt32.TryParse(VertCount, out uint vertCount))
 				graph = new Graph(vertCount, (float)EdgeChance);

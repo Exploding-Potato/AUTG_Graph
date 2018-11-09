@@ -30,16 +30,16 @@ namespace AUTG_Graph
 
 		private void GenerateButton_Click(object sender, RoutedEventArgs e)
 		{
-			// THIS IS SHIT
-			(this.DataContext as MainViewModel).GenerateRandom();
-			throw new Exception("TheProgrammerIsRetardedException");
+			//// THIS IS SHIT
+			//(this.DataContext as MainViewModel).GenerateRandom();
+			//throw new Exception("TheProgrammerIsRetardedException");
 
-			try
-			{
-				CreateNeighbourGrid();
-				PopulateNeighbourGrid();
-			}
-			catch { }
+			//try
+			//{
+			//	CreateNeighbourGrid();
+			//	PopulateNeighbourGrid();
+			//}
+			//catch { }
 		}
 		
 		private void CreateNeighbourGrid()

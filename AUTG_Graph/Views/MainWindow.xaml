@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AUTG_Graph"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        DataContext="{DynamicResource GraphViewModel}">
+        Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.7*"/>
@@ -22,26 +21,28 @@
             Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
             <StackPanel>
                 <Label Content="Graph generation"/>
-                <TextBox Text="{Binding VertCount}"/>
+                <TextBox Text="{Binding VertCount, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
                 
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.8*"/>
                         <ColumnDefinition Width="0.2*"/>
                     </Grid.ColumnDefinitions>
+                    
                     <Slider
+                        x:Name="EdgeChanceSlider"
                         Grid.Column="0"
                         Minimum="0" Maximum="1"
                         Value="{Binding EdgeChance}"
                         TickFrequency="5"/>
                     <Label
                         Grid.Column="1"
-                        Content="WILL OLNY NUMBERS"/>
+                        Content="{Binding ElementName=EdgeChanceSlider, Mode=OneWay, Path=Value}"/>
                 </Grid>
-                
+
                 <Button
-                    Content="Generate"
-                    Click="GenerateButton_Click"/>
+                    Content="Generate graph"
+                    Command="{Binding GenerateGraphCommand}" />
                 <Button Content="Fix to Euler graph"/>
                 <Button Content="Find Euler cycle"/>
             </StackPanel>
@@ -52,7 +53,7 @@
         </Canvas>
 
         <Border
-            Name="NeighborMatrix"
+            Name="NeighbourMatrix"
             Grid.Column="1" Grid.Row="1"
             Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
             
