@@ -25,31 +25,6 @@ namespace AUTG_Graph
 		public MainWindow()
 		{
 			InitializeComponent();
-			this.DataContext = new MainViewModel();
-		}
-
-		private void GenerateButton_Click(object sender, RoutedEventArgs e)
-		{
-			//// THIS IS SHIT
-			//(this.DataContext as MainViewModel).GenerateRandom();
-			//throw new Exception("TheProgrammerIsRetardedException");
-
-			//try
-			//{
-			//	CreateNeighbourGrid();
-			//	PopulateNeighbourGrid();
-			//}
-			//catch { }
-		}
-		
-		private void CreateNeighbourGrid()
-		{
-			throw new NotImplementedException();
-		}
-
-		private void PopulateNeighbourGrid()
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

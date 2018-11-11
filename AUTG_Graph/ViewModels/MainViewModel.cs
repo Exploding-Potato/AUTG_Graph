@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using AUTG_Graph.Model;
 using AUTG_Graph.ViewModels.Commands;
 
@@ -25,33 +27,30 @@ namespace AUTG_Graph.ViewModels
 			get { return _edgeChance; }
 			set { SetProperty(ref _edgeChance, value); }
 		}
-		
 
-		public RelayCommand GenerateGraphCommand { get; private set; }
+		private bool[,] _nMatrix;
+		public bool[,] NMatrix
+		{
+			get { return _nMatrix; }
+			set { SetProperty(ref _nMatrix, value); }
+		}
 		
+		public RelayCommand GenerateGraphCommand { get; private set; }
+
 		public MainViewModel()
 		{
-			GenerateGraphCommand = new RelayCommand(GenerateRandom, CanGenerate);
-		}
+			GenerateGraphCommand = new RelayCommand(
+				delegate
+				{
+					if (UInt32.TryParse(VertCount, out uint vertCount))
+						graph = new Graph(vertCount, (float)EdgeChance);
 
-
-		bool CanGenerate(Object obj)
-		{
-			return UInt32.TryParse(VertCount, out uint vertCount);
+					NMatrix = graph.NMatrix;
+				},
+				delegate
+				{
+					return UInt32.TryParse(VertCount, out uint vertCount);
+				});
 		}
-		
-		public void GenerateRandom(Object obj/*uint maxWeight = 1*/)
-		{
-			if (UInt32.TryParse(VertCount, out uint vertCount))
-				graph = new Graph(vertCount, (float)EdgeChance);
-		}
-
-		public Object GetGraphMatrix()
-		{
-			if (graph == null || graph.NMatrix == null)
-				return null;
-
-			return graph.NMatrix;
-		}
-    }
+	}
 }
