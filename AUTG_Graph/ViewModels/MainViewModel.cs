@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using AUTG_Graph.BaseClasses;
 using AUTG_Graph.Model;
 using AUTG_Graph.ViewModels.Commands;
@@ -13,7 +7,13 @@ namespace AUTG_Graph.ViewModels
 {
 	class MainViewModel : BindableBase
 	{
+		#region Private variables
+
 		private Graph graph;
+
+		#endregion
+
+		#region Public Proerties (and their private values)
 
 		private string _vertCount;
 		public string VertCount
@@ -35,8 +35,18 @@ namespace AUTG_Graph.ViewModels
 			get { return _nMatrix; }
 			set { SetProperty(ref _nMatrix, value); }
 		}
-		
+
+		#endregion
+
+		#region RelayCommands
+
 		public RelayCommand GenerateGraphCommand { get; private set; }
+		public RelayCommand FixToEulerCommand { get; private set; }
+		public RelayCommand FindEulerCommand { get; private set; }
+
+		#endregion
+
+		#region Constructor
 
 		public MainViewModel()
 		{
@@ -52,6 +62,16 @@ namespace AUTG_Graph.ViewModels
 				{
 					return UInt32.TryParse(VertCount, out uint vertCount);
 				});
+
+			FixToEulerCommand = new RelayCommand(
+				delegate { },					// For testing, put FixToEuler call here
+				delegate { return true; });     // For testing, put CanFixToEuler call here (if aplicable)
+
+			FindEulerCommand = new RelayCommand(
+				delegate { },					// For testing, put FindEuler call here
+				delegate { return true; });		// For testing, put CanFindEuler here
 		}
+
+		#endregion 
 	}
 }
