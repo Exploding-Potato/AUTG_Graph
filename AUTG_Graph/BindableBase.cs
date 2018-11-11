@@ -28,11 +28,7 @@ namespace AUTG_Graph
 
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
-			PropertyChangedEventHandler eventHandler = this.PropertyChanged;
-			if (eventHandler != null)
-			{
-				eventHandler(this, new PropertyChangedEventArgs(propertyName));
-			}
+			this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }
