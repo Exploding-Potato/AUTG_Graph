@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using AUTG_Graph.BaseClasses;
 using AUTG_Graph.Model;
 using AUTG_Graph.ViewModels.Commands;
 
