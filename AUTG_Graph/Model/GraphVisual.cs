@@ -40,8 +40,8 @@ namespace AUTG_Graph.Model
 					if (random.NextDouble() <= pointHereChance)
 					{
 						tempPositions.Add(new Point(
-							i * positionDistance,
-							j * positionDistance));
+							(i + 1) * positionDistance,
+							(j + 1) * positionDistance));
 
 						vertsSet++;
 					}

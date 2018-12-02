@@ -68,7 +68,7 @@ namespace AUTG_Graph.ViewModels
 
 					NMatrix = graph.NMatrix;
 
-					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.Red);
+					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
 				},
 				delegate
 				{
@@ -77,18 +77,19 @@ namespace AUTG_Graph.ViewModels
 
 			FixToEulerCommand = new RelayCommand(
 				delegate {
-					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.Red);
+					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
 				},											// For testing, put FixToEuler call here
 				delegate { return !(graph == null); });     // For testing, put CanFixToEuler call here (if aplicable)
 
 			FindEulerCommand = new RelayCommand(
 				delegate
 				{
-					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.Red);
+					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
 				},											// For testing, put FindEuler call here
 				delegate { return !(graph == null); });     // For testing, put CanFindEuler here
 
 			GraphCanvas = new Canvas();
+			GraphCanvas.Name = "x";
 			
 			Console.WriteLine(GraphCanvas.ActualHeight);
 
@@ -97,15 +98,6 @@ namespace AUTG_Graph.ViewModels
 			ellipse.Height = 200;
 			ellipse.Width = 400;
 			GraphCanvas.Children.Add(ellipse);
-
-			Line line = new Line();
-			line.Fill = Brushes.Red;
-			line.X1 = 0;
-			line.Y1 = 0;
-			line.X2 = 999;
-			line.Y2 = 999;
-			line.StrokeThickness = 666;
-			GraphCanvas.Children.Add(line);
 		}
 
 		#endregion

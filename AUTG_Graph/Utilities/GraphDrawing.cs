@@ -14,6 +14,21 @@ namespace AUTG_Graph
 
 			Point[] vertPositions = graph.vertPositions;
 
+			// Draws edges
+			foreach((int, int) e in graph.Edges())
+			{
+				Line line = new Line
+				{
+					X1 = vertPositions[e.Item1].X,
+					Y1 = vertPositions[e.Item1].Y,
+					X2 = vertPositions[e.Item2].X,
+					Y2 = vertPositions[e.Item2].Y,
+					Stroke = lineBrush
+				};
+
+				canvas.Children.Add(line);
+			}
+
 			// Draws vertices
 			foreach (Point p in vertPositions)
 			{
@@ -21,23 +36,10 @@ namespace AUTG_Graph
 				ellipse.Height = ellipse.Width = shapeSize;
 				ellipse.Fill = vertBrush;
 				
-				Canvas.SetLeft(ellipse, p.X);
-				Canvas.SetTop(ellipse, p.Y);
+				Canvas.SetLeft(ellipse, p.X - shapeSize / 2);
+				Canvas.SetTop(ellipse, p.Y - shapeSize / 2);
 
 				canvas.Children.Add(ellipse);
-			}
-
-			// Draws edges
-			foreach((int, int) e in graph.Edges())
-			{
-				Line line = new Line();
-				line.X1 = vertPositions[e.Item1].X;
-				line.Y1 = vertPositions[e.Item1].Y;
-				line.X2 = vertPositions[e.Item2].X;
-				line.Y2 = vertPositions[e.Item2].Y;
-				line.Fill = lineBrush;
-
-				canvas.Children.Add(line);
 			}
 		}
 	}
