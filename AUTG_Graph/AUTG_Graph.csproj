@@ -56,6 +56,8 @@
     </ApplicationDefinition>
     <Compile Include="BaseClasses\BindableBase.cs" />
     <Compile Include="Converters\BoolArray2DToGridConverter.cs" />
+    <Compile Include="Model\GraphVisual.cs" />
+    <Compile Include="Utilities\Drawing.cs" />
     <Compile Include="Model\Graph.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

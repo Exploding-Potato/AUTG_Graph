@@ -27,6 +27,7 @@
             <ColumnDefinition Width="0.8*" MinWidth="70"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Control panel -->
         <Border
             Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
             Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
@@ -34,6 +35,7 @@
                 <Label Content="Graph generation"/>
                 <TextBox Text="{Binding VertCount, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
 
+                <!-- Slider and its value -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -52,18 +54,29 @@
                         ContentStringFormat="N2"/>
                 </Grid>
 
+                <!-- Generate graph button -->
                 <Button
                     Content="Generate graph"
                     Command="{Binding GenerateGraphCommand}" />
-                <Button Content="Fix to Euler graph"/>
-                <Button Content="Find Euler cycle"/>
+                
+                <!-- Fix to Euler graph button -->
+                <Button
+                    Content="Fix to Euler graph"
+                    Command="{Binding FixToEulerCommand}"/>
+                
+                <!-- Find Euler cycle button -->
+                <Button
+                    Content="Find Euler cycle"
+                    Command="{Binding FindEulerCommand}"/>
             </StackPanel>
         </Border>
 
-        <Canvas Name="GraphCanvas" Grid.Column="1" Grid.Row="0">
+        <!-- Display canvas -->
+        <ContentPresenter Grid.Column="1" Grid.Row="0" Content="{Binding GraphCanvas}">
 
-        </Canvas>
+        </ContentPresenter>
 
+        <!-- Neighbor matrix panel -->
         <Border
             Grid.Column="1" Grid.Row="1"
             Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
