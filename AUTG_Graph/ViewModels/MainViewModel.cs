@@ -53,6 +53,7 @@ namespace AUTG_Graph.ViewModels
 		public RelayCommand GenerateGraphCommand { get; private set; }
 		public RelayCommand FixToEulerCommand { get; private set; }
 		public RelayCommand FindEulerCommand { get; private set; }
+		public RelayCommand ResizeWindowCommand { get; private set; }
 
 		#endregion
 
@@ -77,9 +78,12 @@ namespace AUTG_Graph.ViewModels
 
 			FixToEulerCommand = new RelayCommand(
 				delegate {
+					graph.FixToEulerGraph();
+					OnPropertyChanged(nameof(NMatrix));
+
 					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
-				},											// For testing, put FixToEuler call here
-				delegate { return !(graph == null); });     // For testing, put CanFixToEuler call here (if aplicable)
+				},
+				delegate { return !(graph == null); });
 
 			FindEulerCommand = new RelayCommand(
 				delegate
@@ -88,16 +92,13 @@ namespace AUTG_Graph.ViewModels
 				},											// For testing, put FindEuler call here
 				delegate { return !(graph == null); });     // For testing, put CanFindEuler here
 
-			GraphCanvas = new Canvas();
-			GraphCanvas.Name = "x";
-			
-			Console.WriteLine(GraphCanvas.ActualHeight);
+			ResizeWindowCommand = new RelayCommand(
+				delegate
+				{
+					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
+				});
 
-			Ellipse ellipse = new Ellipse();
-			ellipse.Fill = Brushes.Beige;
-			ellipse.Height = 200;
-			ellipse.Width = 400;
-			GraphCanvas.Children.Add(ellipse);
+			GraphCanvas = new Canvas();
 		}
 
 		#endregion
