@@ -44,5 +44,90 @@ namespace AUTG_Graph.Model
 
 			return returnList.ToArray();
 		}
+
+		public void FixToEulerGraph()
+		{
+			Random random = new Random();
+
+			while (!IsEuler())
+			{
+				for(uint i = 0; i < Size; ++i)
+				{
+					uint deg = GetDeg(i);
+					
+					if(deg % 2 == 1)
+					{
+						for(uint j = 0; j < Size; ++j)
+						{
+							if(i == j)
+							{
+								continue;
+							}
+
+							uint deg2 = GetDeg(j);
+
+							if(deg2 % 2 == 1)
+							{
+								if(NMatrix[i, j])
+								{
+									NMatrix[i, j] = false;
+									NMatrix[j, i] = false;
+								}
+								else
+								{
+									NMatrix[i, j] = true;
+									NMatrix[j, i] = true;
+								}
+								break;
+							}
+						}
+					}
+
+					if(deg == 0)
+					{
+						uint v1;
+						do
+						{
+							v1 = (uint)random.Next((int)Size);
+						} while (v1 == i);
+
+						uint v2;
+						do
+						{
+							v2 = (uint)random.Next((int)Size);
+						} while (v2 == i || v1 == i);
+
+						NMatrix[i, v1] = true;
+						NMatrix[v1, i] = true;
+						NMatrix[i, v2] = true;
+						NMatrix[v2, i] = true;
+					}
+				}
+			}
+		}
+
+		private uint GetDeg(uint index)
+		{
+			uint vertDeg = 0;
+			for (uint i = 0; i < Size; ++i)
+			{
+				vertDeg += Convert.ToUInt32(NMatrix[index, i]);
+			}
+
+			return vertDeg;
+		}
+
+		private bool IsEuler()
+		{
+			for(uint i  = 0; i < Size; ++i)
+			{
+				if(GetDeg(i) % 2 == 1)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
 }
