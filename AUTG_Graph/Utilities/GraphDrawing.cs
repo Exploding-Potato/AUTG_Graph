@@ -19,10 +19,10 @@ namespace AUTG_Graph
 			{
 				Line line = new Line
 				{
-					X1 = vertPositions[e.Item1].X,
-					Y1 = vertPositions[e.Item1].Y,
-					X2 = vertPositions[e.Item2].X,
-					Y2 = vertPositions[e.Item2].Y,
+					X1 = vertPositions[e.Item1].X * canvas.ActualWidth,
+					Y1 = vertPositions[e.Item1].Y * canvas.ActualHeight,
+					X2 = vertPositions[e.Item2].X * canvas.ActualWidth,
+					Y2 = vertPositions[e.Item2].Y * canvas.ActualHeight,
 					Stroke = lineBrush
 				};
 
@@ -36,8 +36,8 @@ namespace AUTG_Graph
 				ellipse.Height = ellipse.Width = shapeSize;
 				ellipse.Fill = vertBrush;
 				
-				Canvas.SetLeft(ellipse, p.X - shapeSize / 2);
-				Canvas.SetTop(ellipse, p.Y - shapeSize / 2);
+				Canvas.SetLeft(ellipse, p.X * canvas.ActualWidth - shapeSize / 2);
+				Canvas.SetTop(ellipse, p.Y * canvas.ActualHeight - shapeSize / 2);
 
 				canvas.Children.Add(ellipse);
 			}
