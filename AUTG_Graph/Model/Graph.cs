@@ -49,7 +49,7 @@ namespace AUTG_Graph.Model
 		{
 			Random random = new Random();
 
-			while (!IsEuler())
+			while (!IsEuler() || !IsConnected())
 			{
 				for(uint i = 0; i < Size; ++i)
 				{
@@ -102,6 +102,25 @@ namespace AUTG_Graph.Model
 						NMatrix[i, v2] = true;
 						NMatrix[v2, i] = true;
 					}
+
+					if(!IsConnected())
+					{
+						bool[] visited = VisitedArray(i);
+						for(int j = 0; j < Size; ++j)
+						{
+							if(i == j)
+							{
+								continue;
+							}
+
+							if(!visited[j])
+							{
+								NMatrix[i, j] = true;
+								NMatrix[j, i] = true;
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -121,13 +140,58 @@ namespace AUTG_Graph.Model
 		{
 			for(uint i  = 0; i < Size; ++i)
 			{
-				if(GetDeg(i) % 2 == 1)
+				if(GetDeg(i) % 2 == 1 || GetDeg(i) == 0)
 				{
 					return false;
 				}
 			}
 
 			return true;
+		}
+
+		private bool IsConnected()
+		{
+			bool[] visited = VisitedArray(0);
+
+			for (int i = 0; i < Size; i++)
+			{
+				if(!visited[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private bool[] VisitedArray(uint start)
+		{
+			bool[] visited = new bool[Size];
+
+			visited[start] = true;
+			Queue<uint> queue = new Queue<uint>();
+			queue.Enqueue(start);
+
+			while (queue.Count != 0)
+			{
+				uint current = queue.Dequeue();
+
+				for (uint i = 0; i < Size; i++)
+				{
+					if (i == current)
+					{
+						continue;
+					}
+
+					if (NMatrix[current, i] && !visited[i])
+					{
+						queue.Enqueue(i);
+						visited[i] = true;
+					}
+				}
+			}
+
+			return visited;
 		}
 	}
 }
