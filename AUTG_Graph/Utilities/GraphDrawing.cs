@@ -1,4 +1,5 @@
 ﻿using AUTG_Graph.Model;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -40,6 +41,15 @@ namespace AUTG_Graph
 				Canvas.SetTop(ellipse, p.Y * canvas.ActualHeight - shapeSize / 2);
 
 				canvas.Children.Add(ellipse);
+
+				// It's ugly, but that's only for tests
+				Label label = new Label();
+				label.Content = Array.IndexOf(vertPositions, p);
+				
+				Canvas.SetLeft(label, p.X * canvas.ActualWidth - shapeSize / 2);
+				Canvas.SetTop(label, p.Y * canvas.ActualHeight - shapeSize / 2);
+
+				canvas.Children.Add(label);
 			}
 		}
 	}
