@@ -125,6 +125,85 @@ namespace AUTG_Graph.Model
 			}
 		}
 
+		public List<uint> FindEulerPath()
+		{
+			List<uint> eulerPath = new List<uint>();
+
+			uint current = 0;
+			bool pathExists;
+			bool[,] MatrixCopy = new bool[Size, Size];
+			NMatrix.CopyTo(MatrixCopy, 0);
+		
+			eulerPath.Add(current);
+
+			do
+			{
+				pathExists = false;
+
+				for(uint i = 0; i < Size; ++i)
+				{
+					if(MatrixCopy[current, i])
+					{
+						if(current == i)
+						{
+							continue;
+						}
+
+						uint nodeCount = FindNodes(MatrixCopy, i);
+						MatrixCopy[current, i] = MatrixCopy[i, current] = false;
+						if(nodeCount == FindNodes(MatrixCopy, i))
+						{
+							current = i;
+							eulerPath.Add(current);
+							pathExists = true;
+						}
+						else
+						{
+							MatrixCopy[current, i] = MatrixCopy[i, current] = true;
+						}
+					}
+				}
+
+			}while(pathExists);
+
+			return eulerPath;
+		}
+
+		private uint FindNodes(bool[,] Matrix, uint node)
+		{
+			bool[] visited = new bool[Size];
+			Queue<uint> queue = new Queue<uint>();
+
+			visited[node] = true;
+			queue.Enqueue(node);
+
+			while(queue.Count != 0)
+			{
+				uint current = queue.Dequeue();
+
+				for(uint i = 0; i < Size; ++i)
+				{
+					if(!visited[i] && NMatrix[current, i])
+					{
+						visited[i] = true;
+						queue.Enqueue(i);
+					}
+				}
+			}
+
+			uint result = 0;
+
+			for(int i = 0; i < Size; ++i)
+			{
+				if(visited[i])
+				{
+					result++;
+				}
+			}
+
+			return result - 1;
+		}
+
 		private uint GetDeg(uint index)
 		{
 			uint vertDeg = 0;
