@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using AUTG_Graph.BaseClasses;
 using AUTG_Graph.Model;
 using AUTG_Graph.ViewModels.Commands;
@@ -22,7 +23,10 @@ namespace AUTG_Graph.ViewModels
 		public string VertCount
 		{
 			get { return _vertCount; }
-			set { SetProperty(ref _vertCount, value); }
+			set
+			{
+				SetProperty(ref _vertCount, value);
+			}
 		}
 
 		private double _edgeChance;
@@ -46,6 +50,33 @@ namespace AUTG_Graph.ViewModels
 			set { SetProperty(ref _graphCanvas, value); }
 		}
 
+		private string _graphStateMessage;
+		public string GraphStateMessage
+		{
+			get { return _graphStateMessage; }
+			set { SetProperty(ref _graphStateMessage, value); }
+		}
+
+		private bool _showEulerPath;
+		public bool ShowEulerPath
+		{
+			get { return _showEulerPath; }
+			set
+			{
+				SetProperty(ref _showEulerPath, value);
+
+				if (graph != null)
+					DrawGraph();
+			}
+		}
+
+		private string _eulerPathString;
+		public string EulerPathString
+		{
+			get { return _eulerPathString; }
+			set { SetProperty(ref _eulerPathString, value); }
+		}
+
 		#endregion
 
 		#region RelayCommands
@@ -64,16 +95,22 @@ namespace AUTG_Graph.ViewModels
 			GenerateGraphCommand = new RelayCommand(
 				delegate
 				{
+					EulerPathString = "";
+
 					if (UInt32.TryParse(VertCount, out uint vertCount))
 						graph = new GraphVisual(vertCount, (float)EdgeChance, (10, 10), 50);
 
 					NMatrix = graph.NMatrix;
 
-					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
+					DrawGraph();
+					SetGraphStateMessage();
+					if (graph.IsEuler())
+						SetEulerPathString();
 				},
 				delegate
 				{
-					return UInt32.TryParse(VertCount, out uint vertCount);
+					bool parseSyccesful = UInt32.TryParse(VertCount, out uint vertCount);
+					return parseSyccesful && vertCount < 100;
 				});
 
 			FixToEulerCommand = new RelayCommand(
@@ -81,24 +118,58 @@ namespace AUTG_Graph.ViewModels
 					graph.FixToEulerGraph();
 					OnPropertyChanged(nameof(NMatrix));
 
-					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
+					DrawGraph();
+					SetGraphStateMessage();
+					SetEulerPathString();
 				},
-				delegate { return !(graph == null); });
-
-			FindEulerCommand = new RelayCommand(
-				delegate
-				{
-					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
-				},											// For testing, put FindEuler call here
-				delegate { return !(graph == null); });     // For testing, put CanFindEuler here
+				delegate { return graph != null ? !graph.IsEuler() : false; });
 
 			ResizeWindowCommand = new RelayCommand(
 				delegate
 				{
-					GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
+					DrawGraph();
+					SetGraphStateMessage();
 				});
 
 			GraphCanvas = new Canvas();
+
+
+		}
+		
+		private void SetGraphStateMessage()
+		{
+			if (graph == null)
+				return;
+
+			if (graph.IsEuler())
+				GraphStateMessage = "Graf jest Eulerowski";
+			else if (graph.IsConnected())
+				GraphStateMessage = "Graf jest spójny";
+			else
+				GraphStateMessage = "Graf jest niespójny";
+		}
+
+		private void DrawGraph()
+		{
+			GraphDrawing.DrawGraph(graph, GraphCanvas, Brushes.Pink, Brushes.DarkGray);
+
+			if (ShowEulerPath)
+				GraphDrawing.DrawEuler(graph, GraphCanvas);
+		}
+		
+		private void SetEulerPathString()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			List<uint> eulerPath = graph.FindEulerPath();
+			foreach (var vertex in eulerPath)
+			{
+				sb.Append(vertex + 1);
+				sb.Append(" -> ");
+			}
+			sb.Remove(sb.Length - 3, 3);
+
+			EulerPathString = sb.ToString();
 		}
 
 		#endregion

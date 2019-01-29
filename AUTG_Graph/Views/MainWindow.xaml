@@ -32,7 +32,7 @@
             Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
             Background="GhostWhite" BorderBrush="Gainsboro" BorderThickness="1">
             <StackPanel>
-                <Label Content="Graph generation"/>
+                <Label Content="Generowanie grafu"/>
                 <TextBox Text="{Binding VertCount, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <!-- Slider and its value -->
@@ -56,24 +56,46 @@
 
                 <!-- Generate graph button -->
                 <Button
-                    Content="Generate graph"
+                    Content="Wygeneruj graf"
                     Command="{Binding GenerateGraphCommand}" />
                 
                 <!-- Fix to Euler graph button -->
                 <Button
-                    Content="Fix to Euler graph"
+                    Content="Napraw do Eulerowskiego"
                     Command="{Binding FixToEulerCommand}"/>
-                
+
+                <!-- Message about the graph state -->
+                <Border>
+                    <Label
+                        Content="{Binding GraphStateMessage}"/>
+                </Border>
+
                 <!-- Find Euler cycle button -->
-                <Button
-                    Content="Find Euler cycle"
-                    Command="{Binding FindEulerCommand}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox
+                        IsChecked="{Binding ShowEulerPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label
+                        Grid.Column="0"
+                        Content="Wyświetl ścieżkę Eulera"
+                        ContentStringFormat="N2"/>
+                </Grid>
+
+                <TextBox
+                    Text="{Binding EulerPathString}"
+                    TextWrapping="Wrap"
+                    IsReadOnly="True"/>
             </StackPanel>
         </Border>
 
         <!-- Display canvas -->
         <ContentPresenter Grid.Column="1" Grid.Row="0" Content="{Binding GraphCanvas}">
-
+            
         </ContentPresenter>
 
         <!-- Neighbor matrix panel -->

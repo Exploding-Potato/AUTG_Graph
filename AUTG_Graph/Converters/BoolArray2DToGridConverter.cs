@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿#define _ONE_NUMBERING
+
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,37 +10,41 @@ namespace AUTG_Graph.Converters
 {
 	class BoolArray2DToGridConverter : IValueConverter
 	{
+		private bool[,] oldArray;
+		private Grid grid;
+
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value == null)
 				return null;
-
-
+			
 			bool[,] array = (bool[,]) value;
-
 			uint rows = (uint) array.GetLength(0);
 			uint cols = (uint) array.GetLength(1);
 
-			Grid grid = new Grid();
-
-			for (int i = 0; i < rows; i++)
+			if (oldArray != array)
 			{
-				RowDefinition newRowDefinition = new RowDefinition();
-				newRowDefinition.MinHeight = 18;
-				newRowDefinition.MaxHeight = 18;
+				grid = new Grid();
 
-				grid.RowDefinitions.Add(newRowDefinition);
+				for (int i = 0; i < rows + 1; i++)
+				{
+					grid.RowDefinitions.Add(new RowDefinition
+					{
+						MinHeight = 18,
+						MaxHeight = 18
+					});
+				}
+
+				for (int i = 0; i < cols + 1; i++)
+				{
+					grid.ColumnDefinitions.Add(new ColumnDefinition
+					{
+						MinWidth = 18,
+						MaxWidth = 18
+					});
+				}
 			}
-
-			for (int i = 0; i < cols; i++)
-			{
-				ColumnDefinition newColumnDefinition = new ColumnDefinition();
-				newColumnDefinition.MinWidth = 18;
-				newColumnDefinition.MaxWidth = 18;
-
-				grid.ColumnDefinitions.Add(newColumnDefinition);
-			}
-
+			
 			for (int i = 0; i < rows; i++)
 			{
 				for (int j = 0; j < cols; j++)
@@ -51,25 +52,51 @@ namespace AUTG_Graph.Converters
 					if (i == j)
 						continue;
 
-					CheckBox checkBox = new CheckBox();
-					checkBox.IsChecked = array[i, j];
-					checkBox.IsEnabled = false;
+					CheckBox checkBox = new CheckBox
+					{
+						IsChecked = array[i, j],
+						IsEnabled = false
+					};
 
-					Grid.SetRow(checkBox, i);
-					Grid.SetColumn(checkBox, j);
-					
-					//Binding binding = new Binding();
-					//binding.Source = array[i, j];
-					//binding.Mode = BindingMode.TwoWay;
-					
-					//myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-
-					//checkBox.SetBinding(CheckBox.IsCheckedProperty, binding);
+					Grid.SetRow(checkBox, i + 1);
+					Grid.SetColumn(checkBox, j + 1);
 
 					grid.Children.Add(checkBox);
 				}
 			}
 
+			for (int i = 1; i < rows + 1; i++)
+			{
+				Label label = new Label
+				{
+					Content = i.ToString(),
+					FontSize = 8
+				};
+
+				Grid.SetRow(label, i);
+				Grid.SetColumn(label, 0);
+
+				grid.Children.Add(label);
+			}
+
+			for (int i = 1; i < cols + 1; i++)
+			{
+				Label label = new Label
+				{
+					Content = i.ToString(),
+					FontSize = 8
+				};
+
+				Grid.SetRow(label, 0);
+				Grid.SetColumn(label, i);
+
+				grid.Children.Add(label);
+			}
+
+			Thickness margin = new Thickness(5);
+			grid.Margin = margin;
+
+			oldArray = array;
 			return grid;
 		}
 

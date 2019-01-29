@@ -53,7 +53,7 @@ namespace AUTG_Graph.Model
 			{
 				for(uint i = 0; i < Size; ++i)
 				{
-					uint deg = GetDeg(i);
+					uint deg = GetDeg(NMatrix, i);
 					
 					if(deg % 2 == 1)
 					{
@@ -64,7 +64,7 @@ namespace AUTG_Graph.Model
 								continue;
 							}
 
-							uint deg2 = GetDeg(j);
+							uint deg2 = GetDeg(NMatrix, j);
 
 							if(deg2 % 2 == 1)
 							{
@@ -106,6 +106,7 @@ namespace AUTG_Graph.Model
 					if(!IsConnected())
 					{
 						bool[] visited = VisitedArray(i);
+						int shift = random.Next();
 						for(int j = 0; j < Size; ++j)
 						{
 							if(i == j)
@@ -113,10 +114,11 @@ namespace AUTG_Graph.Model
 								continue;
 							}
 
-							if(!visited[j])
+							int thisJ = (j + shift) % (int)Size;
+							if(!visited[thisJ])
 							{
-								NMatrix[i, j] = true;
-								NMatrix[j, i] = true;
+								NMatrix[i, thisJ] = true;
+								NMatrix[thisJ, i] = true;
 								break;
 							}
 						}
@@ -131,8 +133,7 @@ namespace AUTG_Graph.Model
 
 			uint current = 0;
 			bool pathExists;
-			bool[,] MatrixCopy = new bool[Size, Size];
-			NMatrix.CopyTo(MatrixCopy, 0);
+			bool[,] MatrixCopy = (bool[,])NMatrix.Clone();
 		
 			eulerPath.Add(current);
 
@@ -151,7 +152,7 @@ namespace AUTG_Graph.Model
 
 						uint nodeCount = FindNodes(MatrixCopy, i);
 						MatrixCopy[current, i] = MatrixCopy[i, current] = false;
-						if(nodeCount == FindNodes(MatrixCopy, i))
+						if(nodeCount == FindNodes(MatrixCopy, i) || GetDeg(MatrixCopy, current) == 0)
 						{
 							current = i;
 							eulerPath.Add(current);
@@ -183,7 +184,7 @@ namespace AUTG_Graph.Model
 
 				for(uint i = 0; i < Size; ++i)
 				{
-					if(!visited[i] && NMatrix[current, i])
+					if(!visited[i] && Matrix[current, i])
 					{
 						visited[i] = true;
 						queue.Enqueue(i);
@@ -204,22 +205,22 @@ namespace AUTG_Graph.Model
 			return result - 1;
 		}
 
-		private uint GetDeg(uint index)
+		private uint GetDeg(bool[,] Matrix, uint index)
 		{
 			uint vertDeg = 0;
 			for (uint i = 0; i < Size; ++i)
 			{
-				vertDeg += Convert.ToUInt32(NMatrix[index, i]);
+				vertDeg += Convert.ToUInt32(Matrix[index, i]);
 			}
 
 			return vertDeg;
 		}
 
-		private bool IsEuler()
+		public bool IsEuler()
 		{
 			for(uint i  = 0; i < Size; ++i)
 			{
-				if(GetDeg(i) % 2 == 1 || GetDeg(i) == 0)
+				if(GetDeg(NMatrix, i) % 2 == 1 || GetDeg(NMatrix, i) == 0)
 				{
 					return false;
 				}
@@ -228,7 +229,7 @@ namespace AUTG_Graph.Model
 			return true;
 		}
 
-		private bool IsConnected()
+		public bool IsConnected()
 		{
 			bool[] visited = VisitedArray(0);
 
